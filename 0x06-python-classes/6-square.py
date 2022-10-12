@@ -1,88 +1,87 @@
 #!/usr/bin/python3
-"""Square module."""
+"""Contains a definition of a class Square."""
 
 
 class Square:
-    """Defines a square."""
-
-    def __str__(self):
-        """String representation constructor of this square"""
-        self.my_print()
+    """Definition of a class Square."""
 
     def __init__(self, size=0, position=(0, 0)):
-        """Constructor.
+        """Initializes an object of the class Square.
 
-        Args:
-            size(int): length of side of the square.
-            position(int tuple): position of the square
+        Ensures that the parameter passed is of type int and is not less than 0
+
         """
-        if not (isinstance(size, int)):
-            raise TypeError("size must be an integer")
-        if size < 0:
-            raise ValueError("size must be >= 0")
 
-        self.__size = size
-        self.__position = position
+        if type(size) is not int:
+            raise TypeError("size must be an integer")
+        elif size < 0:
+            raise ValueError("size must be >= 0")
+        else:
+            self.__size = size
+        if type(position) is tuple and (len(position) == 2 and
+                                        type(position[0]) is int and
+                                        type(position[1]) is int and
+                                        position[0] >= 0 and position[1] >= 0):
+                    self.__position = position
+        else:
+            raise TypeError("position must be a tuple of 2 positive integers")
 
     @property
     def size(self):
-        """Properties for the length of a sise of a square.
+        """Returns the value of the size attribute
 
-        Raises:
-            TypeError: if size is not an integer.
-            ValueError: If size < 0.
+        Setter method sets the value of size to value
+        Ensures that the parameter passed is of type int and is not less than 0
+
         """
+
         return self.__size
 
     @size.setter
     def size(self, value):
-        """setter function for private attribute size.
-           Args:
-                value: size value to set to.
-        """
-        if not (isinstance(value, int)):
+        if type(value) is not int:
             raise TypeError("size must be an integer")
-        if value < 0:
+        elif value < 0:
             raise ValueError("size must be >= 0")
-        self.__size = value
+        else:
+            self.__size = value
 
     @property
     def position(self):
-        """Property for square position.
+        """Returns the value of the attribute position.
 
-        Raises:
-            TypeError: If value is not tuple of 2 positive integers.
+        Setter method sets the value of the position attribute.
+        Ensures the parameter passed is a tuple of 2 integers.
         """
+
         return self.__position
 
     @position.setter
     def position(self, value):
-        """setter function for private attribute position
-           Args:
-                value: position value to set to.
-        """
-        if isinstance(value, tuple) and len(value) == 2:
-            if isinstance(value[0], int) and isinstance(value[1], int):
-                if value[0] >= 0 and value[1] >= 0:
+        if type(value) is tuple and (len(value) == 2 and
+                                     type(value[0]) is int and
+                                     type(value[1]) is int and
+                                     value[0] >= 0 and value[1] >= 0):
                     self.__position = value
         else:
-            raise TypeError("position must be tuple of 2 positive integers")
+            raise TypeError("position must be a tuple of 2 positive integers")
 
     def area(self):
-        """Area of the square.
+        """Returns the current square's area"""
 
-        Returns:
-            thee size squared.
-        """
         return self.__size ** 2
 
     def my_print(self):
-        """Prints square with char #"""
+        """Prints in stdout the square with the character '#'.
+        Takes into account the position attribute to determine where to print
+        the square.
+        """
+
         if self.__size == 0:
             print()
         else:
-            i, j = 0, 0
-            for i in range(self.__position[1]):
+            for i in range(0, self.__position[1]):
                 print()
-            for j in range(self.__size):
-                print("{}{}".format(" " * self.__position[0], "#" * self.__size))
+            for n in range(0, self.__size):
+                print(' ' * self.__position[0], end="")
+                print('#' * self.__size)
