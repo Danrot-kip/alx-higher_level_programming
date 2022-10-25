@@ -1,19 +1,23 @@
 #!/usr/bin/python3
-"""Module for task9."""
+"""
+    Python script that adds all args to a Python List.
+    List is then saved to a file.
+"""
 
 
-from sys import argv
+import sys
+import json
+import os.path
+save_to_json_file = __import__('5-save_to_json_file').save_to_json_file
+load_from_json_file = __import__('6-load_from_json_file').load_from_json_file
 
-save_file = __import__('7-save_to_json_file').save_to_json_file
-load_file = __import__('8-load_from_json_file').load_from_json_file
+file = "add_item.json"
+json_list = []
 
-filename = "add_item.json"
+if os.path.exists(file):
+    json_list = load_from_json_file(file)
 
-try:
-    my_list = load_file(filename)
-except FileNotFoundError:
-    my_list = []
+for i in range(1, len(sys.argv)):
+    json_list.append(sys.argv[i])
 
-for n in range(1, len(argv)):
-    my_list.append(argv[n])
-save_file(my_list, filename)
+save_to_json_file(json_list, file)
