@@ -1,43 +1,42 @@
 #!/usr/bin/python3
 """
-Script that reads stdin line by line and computes relevant metrics
+Module for log parsing scripts.
 """
 
-if __name__ == "__main__":
-    import sys
 
-    size = 0
-    status_tally = {"200": 0, "301": 0, "400": 0, "401": 0,
-                    "403": 0, "404": 0, "405": 0, "500": 0}
-    linenum = 0
+import sys
+
+
+if __name__ == "__main__":
+    size = [0]
+    codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+
+    def check_match(line):
+        '''Checks for regexp match in line.'''
+        try:
+            line = line[:-1]
+            words = line.split(" ")
+            size[0] += int(words[-1])
+            code = int(words[-2])
+            if code in codes:
+                codes[code] += 1
+        except:
+            pass
+
+    def print_stats():
+        '''Prints accumulated statistics.'''
+        print("File size: {}".format(size[0]))
+        for k in sorted(codes.keys()):
+            if codes[k]:
+                print("{}: {}".format(k, codes[k]))
+    i = 1
     try:
         for line in sys.stdin:
-            tokens = line.split()
-            if len(tokens) >= 2:
-                num = linenum
-                if tokens[-2] in status_tally:
-                    status_tally[tokens[-2]] += 1
-                    linenum += 1
-                    try:
-                        size += int(tokens[-1])
-                        if num == linenum:
-                            linenum += 1
-                    except:
-                        if num == linenum:
-                            continue
-            if linenum % 10 == 0:
-                print("File size: {}".format(size))
-                for key, value in sorted(status_tally.items()):
-                    if value:
-                        print("{}: {}".format(key, value))
-        print("File size: {}".format(file_size))
-        for key, value in sorted(status_tally.items()):
-            if value:
-                print("{}: {}".format(key, value))
-
+            check_match(line)
+            if i % 10 == 0:
+                print_stats()
+            i += 1
     except KeyboardInterrupt:
-        print("File size: {}".format(size))
-        for key, value in sorted(status_tally.items()):
-            if value:
-                print("{}: {}".format(key, value))
+        print_stats()
         raise
+    print_stats()
